@@ -13,9 +13,12 @@
   History:
 
 	$Log$
+	Revision 1.5  2003/07/02 22:14:33  berndw
+	This is a test of cvs commit
+
 	Revision 1.4  2003/05/13 23:36:16  mrippa
 	Fixed array index out of bounds exception
-
+	
 	Revision 1.3  2003/05/12 03:19:08  mrippa
 	Added another printf.
 	
@@ -44,6 +47,8 @@
 	pwv2tau converts millimeters of water vapor into a value
 	representing the optical depth seen at 225GHz relative to
 	zenith. This is otherwise known as 225Tau.
+
+	This function currently works!
 
    Support:
 	Bernd Weferling: b.weferling@jach.hawaii.edu
