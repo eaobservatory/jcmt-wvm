@@ -9,6 +9,9 @@
 
  History: 
    $Log$
+   Revision 1.3  2003/06/02 21:21:49  mrippa
+   Writes glitch occurances to raw file now (passed in).
+
    Revision 1.2  2003/04/09 20:21:41  mrippa
    #include wvmCal.h
 
@@ -72,7 +75,7 @@
  */
 
 void wvmCal(int cycleCnt,float * data,float eta,float tAmb,
-	    float * tSky, float * tSys)
+	    float * tSky, float * tSys, FILE *rawFP)
 {
   /* The arrays fSky, fSum and fDif will hold the average of the two 
      readings of sky frequency, the sum of the frequency readings 
@@ -114,7 +117,7 @@ void wvmCal(int cycleCnt,float * data,float eta,float tAmb,
   float tCorr = 4.4;
 
   /* errCnt is an error counter */
-  int errCnt[] = {0, 0, 0};
+  static int errCnt[] = {0, 0, 0};
   
   /* The vfcIndex array holds the offsets to:
      1.2 GHz channel in position 0
@@ -202,15 +205,17 @@ void wvmCal(int cycleCnt,float * data,float eta,float tAmb,
 	      if(errCnt[i] < 3)
 		{
 		  errCnt[i] = errCnt[i] + 1;
-		  printf("Glitch channel: %d\n",vfcIndex[i]);
+		  if (rawFP != NULL)
+		      fprintf(rawFP, "Glitch channel: %d\n",vfcIndex[i]);
 		}
 	      else
 		{
-		  printf("Too many errors - restarting averages\n");
-		  errCnt[i] = 0;
-		  avgSky[i] = fSky[i];
-		  avgSum[i] = fSum[i];
-		  avgDif[i] = fDif[i];
+		    if (rawFP != NULL)
+			fprintf(rawFP, "Too many errors - restarting averages\n");
+		    errCnt[i] = 0;
+		    avgSky[i] = fSky[i];
+		    avgSum[i] = fSum[i];
+		    avgDif[i] = fDif[i];
 		}
 	    }
 	}
