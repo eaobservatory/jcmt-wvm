@@ -8,14 +8,14 @@
 #define DEBUG_OPT          0    /* 1 = turn on printing of final data 0=no print*/
 #define DEBUG_OPT_FUNC     0    /* 1 = turn on printing in optimization function 0=no */
 
-void wvmCal(int cycleCnt,float * data,float eta,float tAmb,
-	    float * tSky,float * tSys);
-void wvmOpt(float aMass,float tAmb,float * tSky,float * wa,float * tOff,
-	    float * tWat);
-float aFunction(float *p, float aMass, float *tSky);
-void wvmEst(float aMass, float WA, float TWAT, float TAUO,
-	    float *TBRI, float *TTAU, float *TEFF, float *AEFF);
-double pwv2tau(double airMass, double mmH2O);
+double pwv2tau(double airMass, double mmH2O_a);
+void wvmCal(int cycleCnt,float * data,float eta,
+	      float tAmb, float * tSky,float * tSys);
+void wvmOpt(float airMass,float tAmb,float * tSky,
+	      float * wa,float * tOff, float * tWat);
+float aFunction(float *p, float airMass, float *tSky);
+void wvmEst(float airMass, float WA, float TWAT, float TAUO,
+	      float *TBRI, float *TTAU, float *TEFF, float *AEFF);
 
 /* Given the following wiring:
 
