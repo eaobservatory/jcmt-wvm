@@ -13,9 +13,12 @@
   History:
 
 	$Log$
+	Revision 1.3  2003/05/12 03:19:08  mrippa
+	Added another printf.
+
 	Revision 1.2  2003/05/09 21:56:56  mrippa
 	We now compute the empirical tau model on the C side.
-
+	
 	Revision 1.1  2003/05/06 03:13:41  mrippa
 	Added wvmTau to convert pwv into tau value
 
@@ -49,6 +52,9 @@ double pwv2tau(double airMass, double mmH2O) {
   double mult = 0.0;
   double const_m2, const_m1, const_c, correction, wvm_temp, c1, c2;
 
+  if (TAU_DEBUG > 5)
+    printf("You gave me an airMass of %f and a pwv of %f\n", airMass, mmH2O);
+  
   /* If mmH2O is really bad just return crude conversion */
   if (mmH2O > MMH2O_MAX) {
     return mmH2O/21.0;
