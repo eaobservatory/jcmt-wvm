@@ -17,9 +17,12 @@
  
  *  History:
 	$Log$
+	Revision 1.5  2003/05/15 22:10:52  berndw
+	Test commit for demonstration.
+
 	Revision 1.4  2003/05/12 23:53:09  mrippa
 	Turned off debugging
-
+	
 	Revision 1.3  2003/05/10 21:26:39  mrippa
 	Initialized coefficient arrays set to static const
 	
@@ -38,7 +41,8 @@
 
 
 /* 
-   Descibe the TAU model coefficients here.
+   Descibe the TAU model coefficients here. Added a comment to show
+   Bernd how to commit.
  */
 static const double wvm_cso_coefs[WVM_COEFF_SIZE] = {
   -0.37325545, 38.769126, -13.05137, -25.278241, 
