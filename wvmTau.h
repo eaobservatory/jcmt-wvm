@@ -17,10 +17,13 @@
  
  *  History:
 	$Log$
+	Revision 1.3  2003/05/10 21:26:39  mrippa
+	Initialized coefficient arrays set to static const
+
 	Revision 1.2  2003/05/10 21:24:34  mrippa
 	wvm_cso_coefs now static const since we
 	initialize in the header file.
-
+	
 	Revision 1.1  2003/05/09 21:58:29  mrippa
 	Header file for wcmTau.c. The function pwv2tau() is defined
 	in wvmCal.h.
@@ -41,6 +44,6 @@ static const double wvm_cso_coefs[WVM_COEFF_SIZE] = {
 };
 
 /* Describe the AIRMASS correction coefficients here. */
-double coefs_m1[3] = {0.038863637, -0.18578918, 0.034048884};
-double coefs_m2[3] = {-0.0073803229, 0.027694585, -0.010215906};
-double coefs_c[3] = {-0.026203715, 1.1069635, 0.073422855};
+static const double coefs_m1[3] = {0.038863637, -0.18578918, 0.034048884};
+static const double coefs_m2[3] = {-0.0073803229, 0.027694585, -0.010215906};
+static const double coefs_c[3] = {-0.026203715, 1.1069635, 0.073422855};
