@@ -13,9 +13,12 @@
   History:
 
 	$Log$
+	Revision 1.6  2003/07/02 22:20:47  berndw
+	Just more tests
+
 	Revision 1.5  2003/07/02 22:14:33  berndw
 	This is a test of cvs commit
-
+	
 	Revision 1.4  2003/05/13 23:36:16  mrippa
 	Fixed array index out of bounds exception
 	
@@ -48,7 +51,7 @@
 	representing the optical depth seen at 225GHz relative to
 	zenith. This is otherwise known as 225Tau.
 
-	This function currently works!
+	This function currently works! This is another test.
 
    Support:
 	Bernd Weferling: b.weferling@jach.hawaii.edu
