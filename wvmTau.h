@@ -17,9 +17,12 @@
  
  *  History:
 	$Log$
+	Revision 1.4  2003/05/12 23:53:09  mrippa
+	Turned off debugging
+
 	Revision 1.3  2003/05/10 21:26:39  mrippa
 	Initialized coefficient arrays set to static const
-
+	
 	Revision 1.2  2003/05/10 21:24:34  mrippa
 	wvm_cso_coefs now static const since we
 	initialize in the header file.
@@ -30,8 +33,8 @@
 	
  */
 #define WVM_COEFF_SIZE 11	/* Size of Coeffs array */
-#define TAU_DEBUG 0		/* Debug level: 6 is verbose, 0 is off*/
 #define MMH2O_MAX 7.747		/* Saturation level of calculation */
+#define TAU_DEBUG 0		/* Debug level: 6 is verbose, 0 is off*/
 
 
 /* 
