@@ -17,10 +17,14 @@
  
  *  History:
 	$Log$
+	Revision 1.2  2003/05/10 21:24:34  mrippa
+	wvm_cso_coefs now static const since we
+	initialize in the header file.
+
 	Revision 1.1  2003/05/09 21:58:29  mrippa
 	Header file for wcmTau.c. The function pwv2tau() is defined
 	in wvmCal.h.
-
+	
  */
 #define WVM_COEFF_SIZE 11	/* Size of Coeffs array */
 #define TAU_DEBUG 0		/* Debug level: 6 is verbose, 0 is off*/
@@ -30,7 +34,7 @@
 /* 
    Descibe the TAU model coefficients here.
  */
-double wvm_cso_coefs[WVM_COEFF_SIZE] = {
+static const double wvm_cso_coefs[WVM_COEFF_SIZE] = {
   -0.37325545, 38.769126, -13.05137, -25.278241, 
   31.155206, -16.233469, 4.8036578, -0.86140855, 
   0.092759443, -0.0055237545, 0.00013989644
