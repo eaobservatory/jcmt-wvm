@@ -15,6 +15,8 @@ void wvmOpt(float aMass,float tAmb,float * tSky,float * wa,float * tOff,
 float aFunction(float *p, float aMass, float *tSky);
 void wvmEst(float aMass, float WA, float TWAT, float TAUO,
 	    float *TBRI, float *TTAU, float *TEFF, float *AEFF);
+double pwv2tau(double airMass, double mmH2O);
+
 /* Given the following wiring:
 
     VFC1 => 1.2 GHz IF
