@@ -17,9 +17,12 @@
  
  *  History:
 	$Log$
+	Revision 1.8  2003/07/03 01:26:27  berndw
+	Reset reasonable values.
+
 	Revision 1.7  2003/07/03 01:13:49  berndw
 	Fixed comma
-
+	
 	Revision 1.6  2003/07/03 01:08:17  berndw
 	Committed corny values
 	
@@ -53,7 +56,7 @@
 static const double wvm_cso_coefs[WVM_COEFF_SIZE] = {
   -0.37325545, 38.769126, -13.05137, -25.278241, 
   31.155206, -16.233469, 4.8036578, -0.86140855, 
-  0.092759443, -0.0055237545, /* 0.00013989644, */ 100,
+  0.092759443, -0.0055237545, 0.00013989644
 };
 
 /* Describe the AIRMASS correction coefficients here. */
