@@ -9,6 +9,9 @@
 
  History: 
    $Log$
+   Revision 1.2  2003/04/09 20:21:41  mrippa
+   #include wvmCal.h
+
    Revision 1.1.1.1  2002/07/26 01:41:33  cwalther
    Original Version
 
@@ -26,7 +29,7 @@
 #include <errno.h>
 
 /* WVM includes */
-#include "wvmRun.h"
+#include "wvmCal.h"
 
 /********************************************************************/
 /*+		       w v m C a l

@@ -12,6 +12,9 @@
 
  History: 
    $Log$
+   Revision 1.2  2003/04/09 20:22:10  mrippa
+   #include wvmCal.h
+
    Revision 1.1.1.1  2002/07/26 01:41:33  cwalther
    Original Version
 
@@ -30,7 +33,7 @@
 #include <math.h>
 
 /* WVM includes */
-#include "wvmRun.h"
+#include "wvmCal.h"
 
 
 /********************************************************************/
