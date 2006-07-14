@@ -13,18 +13,12 @@
   History:
 
 	$Log$
-	Revision 0.4  2006/09/01 18:19:22  jbalfour
-	Fixed commenting style
-	
-	Revision 0.3  2006/07/04 17:09:50  jbalfour
-	Commenting on tau2pwv lookup table
-	
-	Revision 0.2  2006/06/30 18:22:59  jbalfour
-	Added tau2pwv routine.
-	
+	Revision 1.7  2006/07/14 19:05:28  rkackley
+	Corrected a typo in the calculation of const_c (code was using coefs_m1 when it should have been using coefs_c). Note that this bug did not affect the final tau value since const_c is arithmetically eliminated when the correction value is computed.
+
 	Revision 1.6  2003/07/02 22:20:47  berndw
 	Just more tests
-
+	
 	Revision 1.5  2003/07/02 22:14:33  berndw
 	This is a test of cvs commit
 	
@@ -90,7 +84,7 @@ double pwv2tau(double airMass, double mmH2O_a) {
   if (TAU_DEBUG > 5)
     printf("m1 is: %f\n", const_m1);
 
-  const_c = coefs_c[0] * pow(mmH2O_a, 2.0) + coefs_c[1] * mmH2O_a + coefs_m1[2];
+  const_c = coefs_c[0] * pow(mmH2O_a, 2.0) + coefs_c[1] * mmH2O_a + coefs_c[2];
   if (TAU_DEBUG > 5)
     printf("c is: %f\n", const_c);
 
