@@ -9,6 +9,9 @@
 
  History: 
    $Log$
+   Revision 1.5  2008/04/10 21:04:56  cwalther
+   Make sure the averaging is done in floating point
+
    Revision 1.4  2008/04/10 20:06:17  cwalther
    Fixed sizes of the airmass and temperature prints
 
@@ -226,7 +229,7 @@ void wvmCal(int cycleCnt,float * data,float eta,float tAmb,
       /* Calculate the scale factor (degrees per kHz) for tSys and tSky */
 
       scaleFac = (tHot[i] - tWarm[i]) / avgDif[i];
-      tSys[i] = (avgSum[i] * scaleFac -tHot[i] - tWarm[i]) / 2;
+      tSys[i] = (avgSum[i] * scaleFac -tHot[i] - tWarm[i]) / 2.0;
       tSky[i] = avgSky[i] * scaleFac - tSys[i];
     }
 
