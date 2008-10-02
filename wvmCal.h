@@ -52,8 +52,10 @@ VFC1_sky_IF => The temperature of the IF plate
 VFC1_hot    => The temperature of the hot load
 VFC1_warm   => The temperature of the warm load
 
-But, VFC3 went bad, so its inputs were wired to VFC4, so we no longer
-receive temperatures.  I am going to define the starting index into the
+But, VFC3 went flaky, so its inputs were wired to VFC4. Now the temperatures
+that were flaky anyway themselves are on the flaky VFC3.
+
+I am going to define the starting index into the
 data where each of the IF channels start.  If the VFC3 is ever fixed,
 this should make things straight forward to change back, and a little
 easier to change back.  So they would be, if VFC3 was working:
@@ -63,7 +65,7 @@ easier to change back.  So they would be, if VFC3 was working:
 #define VFC_7800_MHZ  8
 #define VFC_TEMP     12
 
-And now they are: */
+But now they are: */
 
 #define VFC_1200_MHZ  0
 #define VFC_4200_MHZ  4
