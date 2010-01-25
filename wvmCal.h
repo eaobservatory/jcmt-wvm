@@ -65,12 +65,20 @@ easier to change back.  So they would be, if VFC3 was working:
 #define VFC_7800_MHZ  8
 #define VFC_TEMP     12
 
-But now they are: */
+But now For the original WVM head they sould be:
 
 #define VFC_1200_MHZ  0
 #define VFC_4200_MHZ  4
 #define VFC_7800_MHZ 12
 #define VFC_TEMP      8
+
+But the SMA head is wired like the original was delivered to us: */
+
+#define VFC_1200_MHZ  0
+#define VFC_4200_MHZ  4
+#define VFC_7800_MHZ  8
+#define VFC_TEMP     12
+
 
 #define SKY_OFF1      0
 #define SKY_OFF2      1

@@ -9,6 +9,9 @@
 
  History: 
    $Log$
+   Revision 1.6  2010/01/25 19:58:40  cwalther
+   These changes were made to exclusively handle the new head we got from SMA in 2009
+
    Revision 1.5  2008/04/10 21:04:56  cwalther
    Make sure the averaging is done in floating point
 
@@ -89,20 +92,35 @@ void wvmCal(int cycleCnt,float * data,float eta,float tAmb,
      while looking at the loads */
   float fSky[3], fSum[3], fDif[3];
 
+  /* These arrays hold the brightness temperature of 
+     each load at each frequency */
+  float brightTHot[3], brightTWarm[3];
+
+  
+
+  /* These are the cals from count to degrees C for the hot and warm loads */
+  static float hotBias = 12.5;
+  static float warmBias = 16.5;
+  static float hotSlope = 0.0469;
+  static float warmSlope = 0.0469;
+  float tHot;                                          
+  float tWarm;
+
   /* The arrays avgSky, avgSum and avgDif will hold a running average over
      the past few cycles */
   static float avgSky[] = {0.0, 0.0, 0.0};
   static float avgSum[] = {0.0, 0.0, 0.0};
   static float avgDif[] = {0.0, 0.0, 0.0};
+  static float avgTHot[] = {0.0, 0.0, 0.0};
+  static float avgTWarm[] = {0.0, 0.0, 0.0};
 
 
-  /* tHot and tWarm are the effective temperatures of the calibration
-     load.  Note that these must truely be the effective R-J brightness
-     tempertures and NOT the actual temperatures the effect of this 
-     is to subtract 4.4 K from all actual temperatures. Thus a hot 
-     load at 100 C is at 368.75 effective */
-  static float tHot[] = {364.7, 363.8, 364.6};
-  static float tWarm[] = {303.2 , 303.2, 303.2};
+  /* brightAdjTHot and brightAdjTWarm are the adjustments to get the effective 
+     temperatures (brightness temperature) of the calibration loads from their
+     measured temperatures. This effect is about -4.4 degrees.  Thus a hot 
+     load at 100 C is about 368.75 effective */
+  static float brightAdjTHot[] = {-5.0, -5.1, -3.9};
+  static float brightAdjTWarm[] = {-4.4 , -4.4, -4.4};
 
   /* etaInternal is the Nominal value of coupling efficiency */
   float etaInternal = 0.958;
@@ -110,14 +128,15 @@ void wvmCal(int cycleCnt,float * data,float eta,float tAmb,
   /* General purpose parameters */
   float test, scaleFac;
   int i;
-  char inputStr[100];
-  char channel_names[3][10] = {"1.2 GHz", "4.2 GHz", "7.8 GHz"};
 
   /* avgFacSky, avgFacSum and avgFacDif are Smoothing factors - the 
      fraction carried to the next value If avgFac = 0, no averaging */
   float avgFacSky = 0.0;
   float avgFacSum = 0.6;
   float avgFacDif = 0.9;
+  float avgFacTHot = 0.9;
+  float avgFacTWarm = 0.9;
+
 
   /* Correction for Rayleigh-Jeans  0.5 * h * nu / k  for nu = 183 GHz */
   float tCorr = 4.4;
@@ -136,35 +155,36 @@ void wvmCal(int cycleCnt,float * data,float eta,float tAmb,
   vfcIndex[2] = VFC_7800_MHZ;
   vfcIndex[3] = VFC_TEMP;
 
-/* If this is the first time in this function and eta is greater than zero
-   then prompt for tHot and tWarm */
+  
 
-  if((cycleCnt == 1) && (eta > 0.0))
+  /* Use the counts from the hot and warm loads to adjust the brightness 
+     temperatures of the loads */
+
+  /* First convert the raw counts to kelvin */
+
+  tHot = hotBias + hotSlope * data[vfcIndex[3] + HOT_OFF] + 273.15;
+  tWarm = warmBias + warmSlope * data[vfcIndex[3] + WARM_OFF] + 273.15;
+ 
+
+  for(i=0; i<3; i++)
     {
-      etaInternal = eta;
+      /* Now adjust for the reflectivity of the loads */
 
-      for(i=0; i<3; i++)
+      brightTHot[i] = tHot + brightAdjTHot[i];
+      brightTWarm[i] = tWarm + brightAdjTWarm[i];
+      if(cycleCnt < 4)
 	{
-	  printf("\nEnter hot load effective temperature for the %s channel: (%7.3f) ",
-		 channel_names[i], tHot[i]);
-	  fgets(inputStr,sizeof(inputStr),stdin);
-	  if (strlen(inputStr) > 1)
-	    tHot[i] = atof(inputStr);
+	  avgTHot[i] = brightTHot[i];
+	  avgTWarm[i] = brightTWarm[i];
 	}
-      for(i=0; i<3; i++)
+      else
 	{
-	  printf("\nEnter warm load effective temperature for the %s channel: (%7.3f) ",
-		 channel_names[i], tWarm[i]);
-	  fgets(inputStr,sizeof(inputStr),stdin);
-	  if (strlen(inputStr) > 1)
-	    tWarm[i] = atof(inputStr);
-	}
 
-      printf("\n");
-      for(i=0; i<3; i++)
-	  printf("%s channel hot temp: %f  warm temp: %f\n",
-		 channel_names[i], tHot[i], tWarm[i]);
-	  
+	  /* Average the results */
+
+	  avgTHot[i] = avgTHot[i] * avgFacTHot + brightTHot[i] * (1.0 - avgFacTHot);
+	  avgTWarm[i] = avgTWarm[i] * avgFacTWarm + brightTWarm[i] * (1.0 - avgFacTWarm);
+	}
     }
 
   /* Convert the data into temperatures  (just assume Rayleigh-Jeans 
@@ -180,6 +200,8 @@ void wvmCal(int cycleCnt,float * data,float eta,float tAmb,
       /* Sum and difference of the cal readings */
       fSum[i] = data[vfcIndex[i] + HOT_OFF] + data[vfcIndex[i] + WARM_OFF];
       fDif[i] = data[vfcIndex[i] + HOT_OFF] - data[vfcIndex[i] + WARM_OFF];
+
+
 
       /* Do not average, if less than four cycles into run */
       if(cycleCnt < 4)
@@ -228,8 +250,12 @@ void wvmCal(int cycleCnt,float * data,float eta,float tAmb,
 
       /* Calculate the scale factor (degrees per kHz) for tSys and tSky */
 
-      scaleFac = (tHot[i] - tWarm[i]) / avgDif[i];
-      tSys[i] = (avgSum[i] * scaleFac -tHot[i] - tWarm[i]) / 2.0;
+
+      scaleFac = (avgTHot[i] - avgTWarm[i]) / avgDif[i];
+
+      /*printf("params: %8.1f %8.1f %8.1f\n", avgTHot[i], avgTWarm[i], avgDif[i]);*/
+      
+      tSys[i] = (avgSum[i] * scaleFac -avgTHot[i] - avgTWarm[i]) / 2.0;
       tSky[i] = avgSky[i] * scaleFac - tSys[i];
     }
 
