@@ -9,6 +9,9 @@
 
  History: 
    $Log$
+   Revision 1.7  2010/01/26 01:51:38  cwalther
+   Changes to make the WVM code have multiple personalities
+
    Revision 1.6  2010/01/25 19:58:40  cwalther
    These changes were made to exclusively handle the new head we got from SMA in 2009
 
@@ -96,13 +99,6 @@ void wvmCal(int cycleCnt,float * data,float eta,float tAmb,
      each load at each frequency */
   float brightTHot[3], brightTWarm[3];
 
-  
-
-  /* These are the cals from count to degrees C for the hot and warm loads */
-  static float hotBias = 12.5;
-  static float warmBias = 16.5;
-  static float hotSlope = 0.0469;
-  static float warmSlope = 0.0469;
   float tHot;                                          
   float tWarm;
 
@@ -113,14 +109,6 @@ void wvmCal(int cycleCnt,float * data,float eta,float tAmb,
   static float avgDif[] = {0.0, 0.0, 0.0};
   static float avgTHot[] = {0.0, 0.0, 0.0};
   static float avgTWarm[] = {0.0, 0.0, 0.0};
-
-
-  /* brightAdjTHot and brightAdjTWarm are the adjustments to get the effective 
-     temperatures (brightness temperature) of the calibration loads from their
-     measured temperatures. This effect is about -4.4 degrees.  Thus a hot 
-     load at 100 C is about 368.75 effective */
-  static float brightAdjTHot[] = {-5.0, -5.1, -3.9};
-  static float brightAdjTWarm[] = {-4.4 , -4.4, -4.4};
 
   /* etaInternal is the Nominal value of coupling efficiency */
   float etaInternal = 0.958;
@@ -137,7 +125,6 @@ void wvmCal(int cycleCnt,float * data,float eta,float tAmb,
   float avgFacTHot = 0.9;
   float avgFacTWarm = 0.9;
 
-
   /* Correction for Rayleigh-Jeans  0.5 * h * nu / k  for nu = 183 GHz */
   float tCorr = 4.4;
 
@@ -149,22 +136,37 @@ void wvmCal(int cycleCnt,float * data,float eta,float tAmb,
      4.2 GHz channel in position 1
      7.8 GHz channel in position 2
      The temperature data in position 3 */
+
   int vfcIndex[4];
-  vfcIndex[0] = VFC_1200_MHZ;
-  vfcIndex[1] = VFC_4200_MHZ;
-  vfcIndex[2] = VFC_7800_MHZ;
-  vfcIndex[3] = VFC_TEMP;
+
+  /* The index into the raw data might be different for the different heads */
+
+  vfcIndex[0] = vfc_1200_mhz;
+  vfcIndex[1] = vfc_4200_mhz;
+  vfcIndex[2] = vfc_7800_mhz;
+  vfcIndex[3] = vfc_temp;
 
   
 
-  /* Use the counts from the hot and warm loads to adjust the brightness 
-     temperatures of the loads */
+  /* We will either use the counts of the VtoF to calculate a load temperature
+     or we will have fixed load temperatures */
 
-  /* First convert the raw counts to kelvin */
+  if(fixedLoadTemperatures)
+    {
+      tHot = fixedHotLoadTemp + 273.15;
+      tWarm = fixedWarmLoadTemp + 273.15;
+    }
+  else
+    {
+      /* Use the counts from the hot and warm loads to adjust the brightness 
+	 temperatures of the loads */
 
-  tHot = hotBias + hotSlope * data[vfcIndex[3] + HOT_OFF] + 273.15;
-  tWarm = warmBias + warmSlope * data[vfcIndex[3] + WARM_OFF] + 273.15;
+      tHot = hotBias + hotSlope * data[vfcIndex[3] + HOT_OFF] + 273.15;
+      tWarm = warmBias + warmSlope * data[vfcIndex[3] + WARM_OFF] + 273.15;
+    }
  
+  /* Convert from actual load temperature in kelvin to brightness 
+     temperature, also in kelvin, and then average */
 
   for(i=0; i<3; i++)
     {
@@ -172,6 +174,9 @@ void wvmCal(int cycleCnt,float * data,float eta,float tAmb,
 
       brightTHot[i] = tHot + brightAdjTHot[i];
       brightTWarm[i] = tWarm + brightAdjTWarm[i];
+
+      /* Average (filter) the results */
+
       if(cycleCnt < 4)
 	{
 	  avgTHot[i] = brightTHot[i];
