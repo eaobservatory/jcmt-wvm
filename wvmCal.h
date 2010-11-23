@@ -22,11 +22,19 @@ void wvmEst(float airMass, float WA, float TWAT, float TAUO,
 	      float *TBRI, float *TTAU, float *TEFF, float *AEFF);
 void wvmReadConstants(int *);
 
-/* The offsets into the temperature data of the individual temperatures */ 
-#define SKY_OFF1      0
-#define SKY_OFF2      1
-#define HOT_OFF       2
-#define WARM_OFF      3
+/* The offsets into VFC RF Channels themselves */
+
+int skyOff1Rf;
+int skyOff2Rf;
+int hotOffRf;
+int warmOffRf;
+
+/* The ofsets into the temperature VFC channel only */ 
+
+int skyOff1T;
+int skyOff2T;
+int hotOffT;
+int warmOffT;
 
 /* Given the following wiring:
 

@@ -9,6 +9,9 @@
 
  History: 
    $Log$
+   Revision 1.8  2010/11/23 01:53:19  cwalther
+   These now have the ability for different ordering in the temperature and the RF data
+
    Revision 1.7  2010/01/26 01:51:38  cwalther
    Changes to make the WVM code have multiple personalities
 
@@ -161,8 +164,8 @@ void wvmCal(int cycleCnt,float * data,float eta,float tAmb,
       /* Use the counts from the hot and warm loads to adjust the brightness 
 	 temperatures of the loads */
 
-      tHot = hotBias + hotSlope * data[vfcIndex[3] + HOT_OFF] + 273.15;
-      tWarm = warmBias + warmSlope * data[vfcIndex[3] + WARM_OFF] + 273.15;
+      tHot = hotBias + hotSlope * data[vfcIndex[3] + hotOffT] + 273.15;
+      tWarm = warmBias + warmSlope * data[vfcIndex[3] + warmOffT] + 273.15;
     }
  
   /* Convert from actual load temperature in kelvin to brightness 
@@ -199,12 +202,12 @@ void wvmCal(int cycleCnt,float * data,float eta,float tAmb,
     {
 
       /* Average of two sky readings */
-      fSky[i] = (data[vfcIndex[i] + SKY_OFF1] + 
-		 data[vfcIndex[i] + SKY_OFF2]) / 2.0; 
+      fSky[i] = (data[vfcIndex[i] + skyOff1Rf] + 
+		 data[vfcIndex[i] + skyOff2Rf]) / 2.0; 
 
       /* Sum and difference of the cal readings */
-      fSum[i] = data[vfcIndex[i] + HOT_OFF] + data[vfcIndex[i] + WARM_OFF];
-      fDif[i] = data[vfcIndex[i] + HOT_OFF] - data[vfcIndex[i] + WARM_OFF];
+      fSum[i] = data[vfcIndex[i] + hotOffRf] + data[vfcIndex[i] + warmOffRf];
+      fDif[i] = data[vfcIndex[i] + hotOffRf] - data[vfcIndex[i] + warmOffRf];
 
 
 
