@@ -12,6 +12,9 @@
 
  History: 
    $Log$
+   Revision 1.5  2011/11/30 00:02:49  timj
+   wvmOpt now returns the RMS of the fit
+
    Revision 1.4  2011/11/29 23:57:39  timj
    Use new levmar minimization routine
 
@@ -112,7 +115,7 @@ static void atmEst_f ( double * p, double *x, int m, int n, void *data )
 }
 
 /********************************************************************/
-/*+		       w v m O p t 2
+/*+		       w v m O p t
 
  *  Function name:
       wvmOpt
@@ -142,6 +145,7 @@ static void atmEst_f ( double * p, double *x, int m, int n, void *data )
       (>) waterDens  The line-of sight water density in mm
       (>) tau0       The line of site opacity
       (>) tWat       The effective temperature
+      (>) rms        RMS of fit to model
 
  *  Support: Craig Walther, {JAC}
 
@@ -151,15 +155,14 @@ static void atmEst_f ( double * p, double *x, int m, int n, void *data )
  */
 
 void wvmOpt(float aMass, float tAmb, const float tSky[], float * waterDens, 
-             float * tau0, float * tWater)
+             float * tau0, float * tWater, float * rms)
 {
   float waterDensErr;
   float tau0Err;
   float tWaterErr;
-  float rms;
 
   wvmOptMulti( 1, &aMass, &tAmb, tSky, waterDens, tau0, tWater,
-           &waterDensErr, &tau0Err, &tWaterErr, &rms );
+           &waterDensErr, &tau0Err, &tWaterErr, rms );
 
   return;
 }

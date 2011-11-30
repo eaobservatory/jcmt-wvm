@@ -17,7 +17,7 @@ void wvmCal(int cycleCnt,float * data,float eta,
 	      float tAmb, float * tSky,float * tSys, FILE *rawFP);
 	      float * wa,float * tOff, float * tWat);
 void wvmOpt(float airMass,float tAmb, const float tSky[],
-             float * wa,float * tOff, float * tWat);
+             float * wa,float * tOff, float * tWat, float * rms);
 void wvmOptMulti(size_t n, const float aMass[], const float tAmb[], const float tSky[],
              float * waterDens, float * tau0, float * tWater,
              float * waterDensErr, float * tau0Err, float *tWaterErr, float *rms );
