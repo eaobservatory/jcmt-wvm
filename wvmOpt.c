@@ -12,6 +12,12 @@
 
  History: 
    $Log$
+   Revision 1.6  2011/12/02 01:33:09  timj
+   Fix multi-measurement fit
+
+   The multi-measurement fit should have been minimizing pwvzen rather than
+   pwvlos. wvmOpt still returns line-of-sight PWV.
+
    Revision 1.5  2011/11/30 00:02:49  timj
    wvmOpt now returns the RMS of the fit
 
@@ -93,10 +99,13 @@ static void atmEst_f ( double * p, double *x, int m, int n, void *data )
   j = 0; /* Actual measurement number */
   for (i=0; i < n; i+= 3 ) { /* 3 temperatures at a time */
     float airmass;
+    float pwvlos;
 
     airmass = (wvmdata->airmass)[j];
 
-    wvmEst( airmass, WA, TWAT, TAUO,
+    pwvlos = WA * airmass;
+
+    wvmEst( airmass, pwvlos, TWAT, TAUO,
              TBRI, TTAU, TEFF, AEFF );
 
     x[i] = TBRI[0];
@@ -164,6 +173,9 @@ void wvmOpt(float aMass, float tAmb, const float tSky[], float * waterDens,
   wvmOptMulti( 1, &aMass, &tAmb, tSky, waterDens, tau0, tWater,
            &waterDensErr, &tau0Err, &tWaterErr, rms );
 
+  /* scale back to line of sight */
+  *waterDens *= aMass;
+
   return;
 }
 
@@ -185,6 +197,10 @@ void wvmOpt(float aMass, float tAmb, const float tSky[], float * waterDens,
 
       The tSky data are in groups of 3 for each of n measurements.
 
+      Note that because multiple measurements can be supplied this
+      routine returns zenith values for water density. The tauO is
+      not corrected for airmass so will probably be in error.
+
  *  Language:
       C
 
@@ -201,8 +217,8 @@ void wvmOpt(float aMass, float tAmb, const float tSky[], float * waterDens,
       (<) aMass      The air Mass for each measurement
       (<) tAmb       The ambient temperature for each measurement
       (<) tSky       The sky temperature of each receiver (3xn data points)
-      (>) waterDens  The line-of sight water density in mm
-      (>) tau0       The line of site opacity
+      (>) waterDens  The zenith water density in mm
+      (>) tau0       The average opacity
       (>) tWat       The effective temperature
       (>) waterDensErr Error in water density
       (>) tau0Err    Error in tau0
@@ -261,6 +277,9 @@ void wvmOptMulti(size_t n, const float aMass[], const float tAmb[], const float 
      optically thin) from the first measurement */
 
   *waterDens = (tSky[2] - 3.0)/29.0;
+
+  /* we are minimizing zenith pwv though */
+  *waterDens /= aMass[0];
 
   /* We are going to use an array for the parameters in the order
      waterDens, tWater, tau0. Fill the array with the initial estimate */
