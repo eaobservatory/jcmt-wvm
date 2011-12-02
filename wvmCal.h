@@ -15,7 +15,6 @@ double pwv2tau(double airMass, double mmH2O_a);
 double tau2pwv(double tau);
 void wvmCal(int cycleCnt,float * data,float eta,
 	      float tAmb, float * tSky,float * tSys, FILE *rawFP);
-	      float * wa,float * tOff, float * tWat);
 void wvmOpt(float airMass,float tAmb, const float tSky[],
              float * wa,float * tOff, float * tWat, float * rms);
 void wvmOptMulti(size_t n, const float aMass[], const float tAmb[], const float tSky[],
