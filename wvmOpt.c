@@ -12,6 +12,9 @@
 
  History: 
    $Log$
+   Revision 1.7  2016/01/26 23:40:05  ryanb
+   return iters from wvmOptMulti
+
    Revision 1.6  2011/12/02 01:33:09  timj
    Fix multi-measurement fit
 
@@ -225,6 +228,9 @@ void wvmOpt(float aMass, float tAmb, const float tSky[], float * waterDens,
       (>) tWaterrErr Error in tWater
       (>) rms        RMS of fit to model
 
+ *  Return:
+      Number of iterations used by the optimization routine.
+
  *  Support: Tim Jenness {JAC}
 
 
@@ -232,7 +238,7 @@ void wvmOpt(float aMass, float tAmb, const float tSky[], float * waterDens,
 
  */
 
-void wvmOptMulti(size_t n, const float aMass[], const float tAmb[], const float tSky[],
+int wvmOptMulti(size_t n, const float aMass[], const float tAmb[], const float tSky[],
                  float * waterDens, float * tau0, float * tWater,
                  float * waterDensErr, float * tau0Err, float *tWaterErr, float *rms )
 {
@@ -270,7 +276,7 @@ void wvmOptMulti(size_t n, const float aMass[], const float tAmb[], const float 
   if((tSky[2] > bp[1]) || (tSky[1] < tSky[2]))
     {
       *waterDens = 99.0;
-      return;
+      return 0;
     }
 
   /* make a first guess at the water density (assumes channel 3 is 
@@ -318,6 +324,7 @@ void wvmOptMulti(size_t n, const float aMass[], const float tAmb[], const float 
 
   free(x);
 
+  return ret;
 }
 
 void wvmEst(double aMass, double WA, double TWAT, double TAUO,
