@@ -97,14 +97,14 @@ easier to change back.  So they would be, if VFC3 was working:
 #define VFC_7800_MHZ  8
 #define VFC_TEMP     12
 
-But now For the original WVM head they should be:
+But now For the original (SILVER) WVM head they should be:
 
 #define VFC_1200_MHZ  0
 #define VFC_4200_MHZ  4
 #define VFC_7800_MHZ 12
 #define VFC_TEMP      8
 
-But the SMA head is wired like the original was delivered to us:
+But the BLACK (from SMA) head is wired like the original was delivered to us:
 
 #define VFC_1200_MHZ  0
 #define VFC_4200_MHZ  4
@@ -118,7 +118,7 @@ EXTERN int vfc_4200_mhz;
 EXTERN int vfc_7800_mhz;
 EXTERN int vfc_temp;
 
-/* The following needs to contain on of these two strings: ORIGINAL or SMA */
+/* The following needs to contain on of these two strings: BLACK or SILVER */
 EXTERN char headName[10];
 
 /* These are the cals from count to degrees C for the hot and warm loads 

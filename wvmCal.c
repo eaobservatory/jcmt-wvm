@@ -22,7 +22,7 @@
    Changes to make the WVM code have multiple personalities
 
    Revision 1.6  2010/01/25 19:58:40  cwalther
-   These changes were made to exclusively handle the new head we got from SMA in 2009
+   These changes were made to exclusively handle the new (BLACK) head we got from SMA in 2009
 
    Revision 1.5  2008/04/10 21:04:56  cwalther
    Make sure the averaging is done in floating point
