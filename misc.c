@@ -473,7 +473,9 @@ int info, rank, worksz, *iwork, iworksz;
 static int LEVMAR_LUINVERSE(LM_REAL *A, LM_REAL *B, int m)
 {
 void *buf=NULL;
+#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
 int buf_sz=0;
+#pragma GCC diagnostic pop
 
 register int i, j, k, l;
 int *idx, maxi=-1, idx_sz, a_sz, x_sz, work_sz, tot_sz;
@@ -798,6 +800,7 @@ register LM_REAL sum0=0.0, sum1=0.0, sum2=0.0, sum3=0.0;
        * us to finish off the appropriate number of items.
        */
 
+#pragma GCC diagnostic ignored "-Wimplicit-fallthrough"
       switch(n - i){
         case 7 : e[i]=x[i]-y[i]; sum0+=e[i]*e[i]; ++i;
         case 6 : e[i]=x[i]-y[i]; sum1+=e[i]*e[i]; ++i;
@@ -807,6 +810,8 @@ register LM_REAL sum0=0.0, sum1=0.0, sum2=0.0, sum3=0.0;
         case 2 : e[i]=x[i]-y[i]; sum1+=e[i]*e[i]; ++i;
       case 1 : e[i]=x[i]-y[i]; sum2+=e[i]*e[i]; /*++i;*/
       }
+#pragma GCC diagnostic pop
+
     }
   }
   else{ /* x==0 */
@@ -833,6 +838,7 @@ register LM_REAL sum0=0.0, sum1=0.0, sum2=0.0, sum3=0.0;
        * us to finish off the appropriate number of items.
        */
 
+#pragma GCC diagnostic ignored "-Wimplicit-fallthrough"
       switch(n - i){
         case 7 : e[i]=-y[i]; sum0+=e[i]*e[i]; ++i;
         case 6 : e[i]=-y[i]; sum1+=e[i]*e[i]; ++i;
@@ -842,6 +848,8 @@ register LM_REAL sum0=0.0, sum1=0.0, sum2=0.0, sum3=0.0;
         case 2 : e[i]=-y[i]; sum1+=e[i]*e[i]; ++i;
       case 1 : e[i]=-y[i]; sum2+=e[i]*e[i]; /*++i;*/
       }
+#pragma GCC diagnostic pop
+
     }
   }
 

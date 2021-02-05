@@ -1,6 +1,6 @@
 /*
 /////////////////////////////////////////////////////////////////////////////////
-// 
+//
 //  Solution of linear systems involved in the Levenberg - Marquardt
 //  minimization algorithm
 //  Copyright (C) 2004  Manolis Lourakis (lourakis at ics forth gr)
@@ -20,7 +20,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 */
 
-/******************************************************************************** 
+/********************************************************************************
  * LAPACK-based implementations for various linear system solvers. The same core
  * code is used with appropriate #defines to derive single and double precision
  * solver versions, see also Axb_core.c
@@ -50,7 +50,7 @@
 
 /*
 /////////////////////////////////////////////////////////////////////////////////
-// 
+//
 //  Solution of linear systems involved in the Levenberg - Marquardt
 //  minimization algorithm
 //  Copyright (C) 2004  Manolis Lourakis (lourakis at ics forth gr)
@@ -92,7 +92,7 @@
 /*
  * This function returns the solution of Ax = b
  *
- * The function employs LU decomposition followed by forward/back substitution (see 
+ * The function employs LU decomposition followed by forward/back substitution (see
  * also the LAPACK-based LU solver above)
  *
  * A is mxm, b is mx1
@@ -107,7 +107,9 @@
 int AX_EQ_B_LU(LM_REAL *A, LM_REAL *B, LM_REAL *x, int m)
 {
 __STATIC__ void *buf=NULL;
+#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
 __STATIC__ int buf_sz=0;
+#pragma GCC diagnostic pop
 
 register int i, j, k;
 int *idx, maxi=-1, idx_sz, a_sz, work_sz, tot_sz;
@@ -125,7 +127,7 @@ LM_REAL *a, *work, max, sum, tmp;
 #else
     return 1; /* NOP */
 #endif /* LINSOLVERS_RETAIN_MEMORY */
-   
+
   /* calculate required memory size */
   idx_sz=m;
   a_sz=m*m;

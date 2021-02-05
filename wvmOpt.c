@@ -1,16 +1,16 @@
 /*
-                                                                  
-  File name: 
+
+  File name:
     wvmOpt.c
 
-  Description:  
+  Description:
 
   Functions:
     wvmEst
     wvmOpt
     wvmOptMulti
 
- History: 
+ History:
    $Log$
    Revision 1.7  2016/01/26 23:40:05  ryanb
    return iters from wvmOptMulti
@@ -76,7 +76,8 @@ typedef struct data {
 /* The function to be minimized returns the theoretical result in an
    array so is a simplified layer on top of wvmEst */
 
-static void atmEst_f ( double * p, double *x, int m, int n, void *data )
+static void atmEst_f ( double * p, double *x, int m __attribute__((unused)),
+                       int n, void *data )
 {
   double AEFF[3];
   double TBRI[3];
@@ -140,18 +141,18 @@ static void atmEst_f ( double * p, double *x, int m, int n, void *data )
    Calculate the best fitting water, broadband opacity and effective
    temperature.
 
-      
+
  *  Language:
       C
 
  *  Call:
- 
-      wvmOpt(float aMass, float tAmb, const float tSky[], float * waterDens, 
+
+      wvmOpt(float aMass, float tAmb, const float tSky[], float * waterDens,
              float * tau0, float * tWat);
 
  *  Parameters:
       ("<" input, "!" modified, "W" workspace, ">" output)
-      (<) aMass      The air Mass 
+      (<) aMass      The air Mass
       (<) tAmb       The ambient temperature
       (<) tSky       The sky temperature of each receiver (3 data points)
       (>) waterDens  The line-of sight water density in mm
@@ -162,11 +163,11 @@ static void atmEst_f ( double * p, double *x, int m, int n, void *data )
  *  Support: Craig Walther, {JAC}
 
 
- *- 
+ *-
 
  */
 
-void wvmOpt(float aMass, float tAmb, const float tSky[], float * waterDens, 
+void wvmOpt(float aMass, float tAmb, const float tSky[], float * waterDens,
              float * tau0, float * tWater, float * rms)
 {
   float waterDensErr;
@@ -208,7 +209,7 @@ void wvmOpt(float aMass, float tAmb, const float tSky[], float * waterDens,
       C
 
  *  Call:
- 
+
       wvmOptMulti(size_t n, const float aMass[], const float tAmb[],
              const float tSky[], float * waterDens,
              float * tau0, float * tWat, float *waterDensErr,
@@ -246,7 +247,7 @@ int wvmOptMulti(size_t n, const float aMass[], const float tAmb[], const float t
   wvmData data;
 
   const size_t m = 3;
-  int i;
+  size_t i;
 
   double params[3];   /* initial guesses */
   double tp[] = {19.9, 285., 0.25};  /* upper limits */
@@ -279,7 +280,7 @@ int wvmOptMulti(size_t n, const float aMass[], const float tAmb[], const float t
       return 0;
     }
 
-  /* make a first guess at the water density (assumes channel 3 is 
+  /* make a first guess at the water density (assumes channel 3 is
      optically thin) from the first measurement */
 
   *waterDens = (tSky[2] - 3.0)/29.0;
@@ -330,10 +331,10 @@ int wvmOptMulti(size_t n, const float aMass[], const float tAmb[], const float t
 void wvmEst(double aMass, double WA, double TWAT, double TAUO,
 	    double *TBRI, double *TTAU, double *TEFF, double *AEFF)
 {
-  /* Given the water vapour in the line of sight, the effective temperature 
-     of the water and the excess broadband opacity (e.g. due to clouds), 
-     calculates the expected (Rayleigh Jeans) brightness temperatures for 
-     the three channels of the radiometer plus the total opacity and the 
+  /* Given the water vapour in the line of sight, the effective temperature
+     of the water and the excess broadband opacity (e.g. due to clouds),
+     calculates the expected (Rayleigh Jeans) brightness temperatures for
+     the three channels of the radiometer plus the total opacity and the
      effective temperature of the water.
      Uses a simple 2-slab model but with coefficients adjusted to match ATM
   */
@@ -368,16 +369,16 @@ void wvmEst(double aMass, double WA, double TWAT, double TAUO,
 
       /* Effective temperature (includes effect of opacity, crudely) */
       temporary = -1. * TAUW/3.5;
-      TEFF[j] = TWAT - RJC - TOFF[j] 
+      TEFF[j] = TWAT - RJC - TOFF[j]
 	+ DELT[j]*(1. - exp(temporary));
 
       /* Radiative transfer */
-      temporary = -1. * TAUW-TAUO; 
+      temporary = -1. * TAUW-TAUO;
       ABSP = exp(temporary);
       TBRI[j] = TOUT*ABSP + TEFF[j]*(1.-ABSP);
 
-      /* Total opacity */ 
+      /* Total opacity */
       TTAU[j] = TAUW + TAUO + B[j] * aMass;
-      
+
     }
 }
