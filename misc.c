@@ -473,9 +473,13 @@ int info, rank, worksz, *iwork, iworksz;
 static int LEVMAR_LUINVERSE(LM_REAL *A, LM_REAL *B, int m)
 {
 void *buf=NULL;
+#if defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 8))
 #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
+#endif
 int buf_sz=0;
+#if defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 8))
 #pragma GCC diagnostic pop
+#endif
 
 register int i, j, k, l;
 int *idx, maxi=-1, idx_sz, a_sz, x_sz, work_sz, tot_sz;
@@ -620,10 +624,10 @@ LM_REAL fact;
    rnk=LEVMAR_PSEUDOINVERSE(JtJ, C, m);
    if(!rnk) return 0;
 #else
-#ifdef _MSC_VER
-#pragma message("LAPACK not available, LU will be used for matrix inversion when computing the covariance; this might be unstable at times")
-#else
+#if defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 8))
 #pragma GCC warning "LAPACK not available, LU will be used for matrix inversion when computing the covariance; this might be unstable at times"
+#else
+#pragma message("LAPACK not available, LU will be used for matrix inversion when computing the covariance; this might be unstable at times")
 #endif /* _MSC_VER */
 
    rnk=LEVMAR_LUINVERSE(JtJ, C, m);
@@ -799,8 +803,9 @@ register LM_REAL sum0=0.0, sum1=0.0, sum2=0.0, sum3=0.0;
       /* Jump into the case at the place that will allow
        * us to finish off the appropriate number of items.
        */
-
+#if defined(__GNUC__) && __GNUC__ >= 5
 #pragma GCC diagnostic ignored "-Wimplicit-fallthrough"
+#endif
       switch(n - i){
         case 7 : e[i]=x[i]-y[i]; sum0+=e[i]*e[i]; ++i;
         case 6 : e[i]=x[i]-y[i]; sum1+=e[i]*e[i]; ++i;
@@ -810,7 +815,9 @@ register LM_REAL sum0=0.0, sum1=0.0, sum2=0.0, sum3=0.0;
         case 2 : e[i]=x[i]-y[i]; sum1+=e[i]*e[i]; ++i;
       case 1 : e[i]=x[i]-y[i]; sum2+=e[i]*e[i]; /*++i;*/
       }
+#if defined(__GNUC__) && __GNUC__ >= 5
 #pragma GCC diagnostic pop
+#endif
 
     }
   }
@@ -838,7 +845,9 @@ register LM_REAL sum0=0.0, sum1=0.0, sum2=0.0, sum3=0.0;
        * us to finish off the appropriate number of items.
        */
 
+#if defined(__GNUC__) && __GNUC__ >= 5
 #pragma GCC diagnostic ignored "-Wimplicit-fallthrough"
+#endif
       switch(n - i){
         case 7 : e[i]=-y[i]; sum0+=e[i]*e[i]; ++i;
         case 6 : e[i]=-y[i]; sum1+=e[i]*e[i]; ++i;
@@ -848,7 +857,9 @@ register LM_REAL sum0=0.0, sum1=0.0, sum2=0.0, sum3=0.0;
         case 2 : e[i]=-y[i]; sum1+=e[i]*e[i]; ++i;
       case 1 : e[i]=-y[i]; sum2+=e[i]*e[i]; /*++i;*/
       }
+#if defined(__GNUC__) && __GNUC__ >= 5
 #pragma GCC diagnostic pop
+#endif
 
     }
   }

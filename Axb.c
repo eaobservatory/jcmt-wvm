@@ -107,9 +107,13 @@
 int AX_EQ_B_LU(LM_REAL *A, LM_REAL *B, LM_REAL *x, int m)
 {
 __STATIC__ void *buf=NULL;
+#if defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 8))
 #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
+#endif
 __STATIC__ int buf_sz=0;
+#if defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 8))
 #pragma GCC diagnostic pop
+#endif
 
 register int i, j, k;
 int *idx, maxi=-1, idx_sz, a_sz, work_sz, tot_sz;
