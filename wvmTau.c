@@ -146,8 +146,19 @@ double pwv2tau_bydate(double mjdate, double mmH2O_z) {
   } else if (mjdate < 56391.0) { /* 20130119 to 20130409 (excl.) */
     /* From Per Friberg 20130319 */
     mmH2O_z = 0.966982186 * mmH2O_z + 0.000062197;
-  } else { /* From 20130409 ("Black" WVM installed) */
+
+  } else if (mjdate < 59234.0) { /* 20130409 to 20210120 (excl.) */
+    /* "Black" WVM installed */
     /* Requested by Jessica Dempsey 20130530 */
+    /* No correction */
+
+  } else if (mjdate < 59243.0) { /* 20210120 to 20210129 (excl.) */
+    /* New temperature calibration (event 20210120.001) */
+    /* Preliminary fit from 2020-08-25 - 2021-01-19 where PWV > 1.5. */
+    mmH2O_z = 0.949077796617 * mmH2O_z + 0.040246333249;
+
+  } else { /* From 20210129 */
+    /* Original calibration restored (event 20210129.001) */
     /* No correction */
   }
 
